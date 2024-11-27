@@ -2,6 +2,7 @@ import sqlite3
 import streamlit as st
 import pandas as pd
 import altair as alt
+import random
 
 # Connect to the database (creates it if it doesn't exist)
 conn = sqlite3.connect('vocabulary2.db', check_same_thread=False)
@@ -20,6 +21,14 @@ cursor.execute('''
 ''')
 conn.commit()
 
+
+
+#cursor.execute('''
+#    ALTER TABLE vocabulary
+#    ADD COLUMN progress_tracker INTEGER DEFAULT 0
+#''')
+
+#conn.commit()
 
 my_dict = {
     'key1': ['value1_1', 'value1_2'],
@@ -75,14 +84,82 @@ def count_items(conn):
     count = cur.fetchone()[0]  # fetchone() returns a tuple (count,) so we access the first element
     return count
 
+def increment_progress_tracker(conn, row_id, increment_value=1):
+    try:
+        # Update the progress_tracker for the specified row
+        cur = conn.cursor()
+        cur.execute('''
+            UPDATE vocabulary
+            SET progress_tracker = progress_tracker + ?
+            WHERE id = ?
+        ''', (increment_value, row_id))
+        conn.commit()
+        print(f"Progress tracker for row id {row_id} updated successfully.")
+    except sqlite3.Error:
+        print(f"An error occurred")
+
+
+def decrement_progress_tracker(conn, row_id, decrement_value=1):
+    try:
+        cur = conn.cursor()
+        cur.execute('''
+            UPDATE vocabulary
+            SET progress_tracker = progress_tracker - ?
+            WHERE id = ?
+        ''', (decrement_value, row_id))
+        conn.commit()
+        print(f"Progress tracker for row id {row_id} decremented successfully.")
+    except sqlite3.Error:
+        print(f"An error occurred")
+
+def get_progress_tracker(conn, row_id):
+    try:
+        cur = conn.cursor()
+        cur.execute('''
+            SELECT progress_tracker 
+            FROM vocabulary 
+            WHERE id = ?
+        ''', (row_id,))
+        result = cur.fetchone()
+        if result:
+            return result[0]  # Fetch the progress_tracker value
+        else:
+            print(f"No entry found with id {row_id}.")
+            return None
+    except sqlite3.Error:
+        print(f"An error occurred")
+        return None
+    
+
+def get_definition(conn, row_id):
+    try:
+        cur = conn.cursor()
+        cur.execute('''
+            SELECT definition
+            FROM vocabulary
+            WHERE id = ?
+        ''', (row_id,))
+        result = cur.fetchone()
+        if result:
+            return result[0]
+    
+    except sqlite3.Error:
+        print("Error retrieving definition")
+        return None
 
 
 
+#print(get_random_definition(conn))
 #delete_data(conn)
 #add_data(conn, "thing", "thing_def", "unknown")
-print(get_word_by_id(conn, 1))
+#increment_progress_tracker(conn, 1)
+#decrement_progress_tracker(conn, 1)
+#print(get_word_by_id(conn, 1))
 #list = get_data(conn)
 #for i in list: print (i)
+test_word = (get_word_by_id(conn, 4))
+print(test_word)
+print(test_word[2])
 
 
 
