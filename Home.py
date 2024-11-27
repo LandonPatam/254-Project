@@ -99,6 +99,26 @@ def increment_progress_tracker(conn, row_id, increment_value=1):
         print(f"An error occurred")
 
 
+def mark_word_as_known(conn, row_id):
+    try:
+        # Create a cursor to interact with the database
+        cursor = conn.cursor()
+        
+        # Update the 'known' column to 'known' for the specific row
+        cursor.execute('''
+            UPDATE vocabulary
+            SET known = 'known'
+            WHERE id = ?
+        ''', (row_id,))
+        
+        # Commit the changes to the database
+        conn.commit()
+        print(f"Word with ID {row_id} is now marked as known.")
+    
+    except sqlite3.Error as e:
+        print(f"An error occurred: {e}")
+
+
 def decrement_progress_tracker(conn, row_id, decrement_value=1):
     try:
         cur = conn.cursor()
@@ -173,6 +193,9 @@ for i in list:
         learned += 1
     elif i[3] == "unknown":
         not_learned +=1
+    if i[4] >= 5:
+        mark_word_as_known(conn, i[0])
+        print("NEW WORD LEARNED")
 
 learned_data.append(learned)
 learned_data.append(not_learned)
