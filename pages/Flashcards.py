@@ -4,11 +4,11 @@ from Home import *
 
 
 
-# Initialize session state for keeping track of current word
+# INITIALIZES SESSION STATE AND SETS ALL VARIABLES FOR SESSION
 if 'study_value' not in st.session_state:
     random_value = random.randint(1, count_items(conn))
     study_value = get_word_by_id(conn, random_value)
-    st.session_state.study_value = study_value  # Store it in session state
+    st.session_state.study_value = study_value
 
 
     item_count = count_items(conn) 
@@ -34,18 +34,17 @@ if 'study_value' not in st.session_state:
 
 
 
-# Show the current word
+# DISPLAYS CURRENT WORD / METRICS OF WORD
 st.metric(label="Word", value=st.session_state.study_value[1], delta=st.session_state.study_value[4])
 
 
-# Create 4 columns for the buttons
+# CREATES COLUMNS FOR THE DEFINITION BUTTONS AND MAKES THE BUTTONS
 col1, col2, col3, col4 = st.columns(4)
 
-# Add buttons to each column
 with col1:
-    button1_label = get_definition(conn, st.session_state.var1)  # Get the definition only once
-    if st.button(button1_label):  # Use the variable for the label
-        if st.session_state.study_value[2] == button1_label:  # Compare the definition with the correct value
+    button1_label = get_definition(conn, st.session_state.var1)
+    if st.button(button1_label):
+        if st.session_state.study_value[2] == button1_label:
             st.write("Correct Definition")
             increment_progress_tracker(conn, st.session_state.study_value[0])
 
@@ -85,9 +84,9 @@ with col4:
             increment_progress_tracker(conn, st.session_state.study_value[0])
         else:
             st.write("Wrong Definition")
-            decrement_progress_tracker(conn, study_value[0])
+            decrement_progress_tracker(conn, st.session_state.study_value[0])
 
-# Add "Next Word" button to get a new word and update the session state
+# NEXT WORD BUTTON FOR RANDOMIZING NEXT WORD / BUTTON DEFINITIONS
 if st.button("Next Word"):
     random_value = random.randint(1, count_items(conn))
     study_value = get_word_by_id(conn, random_value)
@@ -115,4 +114,4 @@ if st.button("Next Word"):
 
 
 
-    st.rerun()  # This reruns the app to update the displayed word
+    st.rerun() 

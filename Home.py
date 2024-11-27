@@ -4,13 +4,11 @@ import pandas as pd
 import altair as alt
 import random
 
-# Connect to the database (creates it if it doesn't exist)
+# DATABASE CONNECTIONS
 conn = sqlite3.connect('vocabulary2.db', check_same_thread=False)
-
-# Create a cursor
 cursor = conn.cursor()
 
-# Create the vocabulary table
+# CREATES TABLE
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS vocabulary (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -22,14 +20,14 @@ cursor.execute('''
 conn.commit()
 
 
-
+# ADDED EXTRA COLUMN TO TABLE 
 #cursor.execute('''
 #    ALTER TABLE vocabulary
 #    ADD COLUMN progress_tracker INTEGER DEFAULT 0
 #''')
-
 #conn.commit()
 
+# TEST VARIABLES
 my_dict = {
     'key1': ['value1_1', 'value1_2'],
     'key2': ['value2_1', 'value2_2'],
@@ -39,7 +37,7 @@ my_dict = {
 new_list = {}
 
 
-
+# ADDS DATA TO TABLE
 def add_data(conn, word, definition, learned):
     try:
 
@@ -52,12 +50,15 @@ def add_data(conn, word, definition, learned):
         print("ALREADY IN DB")
         return False
 
+# GETS DATA FROM TABLE 
 def get_data(conn):
     cur = conn.cursor()
     cur.execute("SELECT * FROM vocabulary")
     new_list = cur.fetchall()
     return new_list
 
+
+# DELETES ALL DATA
 def delete_data(conn):
     try:
 
@@ -70,20 +71,21 @@ def delete_data(conn):
     except sqlite3.Error:
         print("ERROR IN DELETING DB DATA")
 
-
+# RETRIEVES WORD BY ID 
 def get_word_by_id(conn, word_id):
     cur = conn.cursor()
     cur.execute("SELECT * FROM vocabulary WHERE id = ?", (word_id,))
     result = cur.fetchone()  # fetchone() returns a single record or None
     return result
 
-
+# RETURNS COUNT OF ALL ITEMS IN TABLE
 def count_items(conn):
     cur = conn.cursor()
     cur.execute("SELECT COUNT(*) FROM vocabulary")
     count = cur.fetchone()[0]  # fetchone() returns a tuple (count,) so we access the first element
     return count
 
+# INCREMENTS PROGRESS TRACKER VARIABLE
 def increment_progress_tracker(conn, row_id, increment_value=1):
     try:
         # Update the progress_tracker for the specified row
@@ -98,7 +100,7 @@ def increment_progress_tracker(conn, row_id, increment_value=1):
     except sqlite3.Error:
         print(f"An error occurred")
 
-
+# CHANGES STATUS OF WORD FROM UNKNOWN TO KNOWN
 def mark_word_as_known(conn, row_id):
     try:
         # Create a cursor to interact with the database
@@ -115,10 +117,31 @@ def mark_word_as_known(conn, row_id):
         conn.commit()
         print(f"Word with ID {row_id} is now marked as known.")
     
-    except sqlite3.Error as e:
-        print(f"An error occurred: {e}")
+    except sqlite3.Error:
+        print(f"An error occurred")
 
 
+def mark_word_as_UNknown(conn, row_id):
+    try:
+        # Create a cursor to interact with the database
+        cursor = conn.cursor()
+        
+        # Update the 'known' column to 'known' for the specific row
+        cursor.execute('''
+            UPDATE vocabulary
+            SET known = 'unknown'
+            WHERE id = ?
+        ''', (row_id,))
+        
+        # Commit the changes to the database
+        conn.commit()
+        print(f"Word with ID {row_id} is now marked as known.")
+    
+    except sqlite3.Error:
+        print(f"An error occurre")
+
+
+# DECREMENTS PROGRESS TRACKER
 def decrement_progress_tracker(conn, row_id, decrement_value=1):
     try:
         cur = conn.cursor()
@@ -132,6 +155,7 @@ def decrement_progress_tracker(conn, row_id, decrement_value=1):
     except sqlite3.Error:
         print(f"An error occurred")
 
+# RETRIEVES PROGRESS TRACKER
 def get_progress_tracker(conn, row_id):
     try:
         cur = conn.cursor()
@@ -150,7 +174,7 @@ def get_progress_tracker(conn, row_id):
         print(f"An error occurred")
         return None
     
-
+# RETRIEVES DEFINITIONS
 def get_definition(conn, row_id):
     try:
         cur = conn.cursor()
@@ -169,6 +193,8 @@ def get_definition(conn, row_id):
 
 
 
+# MORE TEST SECTION
+
 #print(get_random_definition(conn))
 #delete_data(conn)
 #add_data(conn, "thing", "thing_def", "unknown")
@@ -177,11 +203,12 @@ def get_definition(conn, row_id):
 #print(get_word_by_id(conn, 1))
 #list = get_data(conn)
 #for i in list: print (i)
-test_word = (get_word_by_id(conn, 4))
-print(test_word)
-print(test_word[2])
+#test_word = (get_word_by_id(conn, 4))
+#print(test_word)
+#print(test_word[2])
 
 
+# DATA MANIPULATION
 
 list = get_data(conn)
 learned = 0
@@ -196,6 +223,9 @@ for i in list:
     if i[4] >= 5:
         mark_word_as_known(conn, i[0])
         print("NEW WORD LEARNED")
+    elif i[4] < 5:
+        mark_word_as_UNknown(conn, i[0])
+        print("WORD UNLEARNED")
 
 learned_data.append(learned)
 learned_data.append(not_learned)

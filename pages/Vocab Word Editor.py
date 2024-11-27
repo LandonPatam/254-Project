@@ -19,7 +19,11 @@ learned = "unknown"
 
 if st.button("Submit"):
     if word and definition:
-        add_data(conn, word, definition, learned)
+        try:
+            add_data(conn, word, definition, learned)
+            st.write("Word Added successfully")
+        except:
+            st.write("Problem adding word")
 
 
 if st.button("Delete all data"):
