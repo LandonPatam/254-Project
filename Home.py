@@ -35,7 +35,8 @@ my_dict = {
 }
 
 new_list = {}
-
+completed_task_count = 0
+print(completed_task_count)
 
 # ADDS DATA TO TABLE
 def add_data(conn, word, definition, learned):
@@ -229,6 +230,7 @@ for i in list:
 
 learned_data.append(learned)
 learned_data.append(not_learned)
+
 
 
 

@@ -5,6 +5,7 @@ from Home import *
 
 
 # INITIALIZES SESSION STATE AND SETS ALL VARIABLES FOR SESSION
+
 if 'study_value' not in st.session_state:
     random_value = random.randint(1, count_items(conn))
     study_value = get_word_by_id(conn, random_value)
