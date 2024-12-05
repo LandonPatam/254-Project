@@ -41,8 +41,11 @@ with st.form(key="task_form"):
     new_task = st.text_input("Enter a new task")
     submit = st.form_submit_button(label="Add Task")
     if submit and new_task:
-         add_task(conn, new_task)
-         #st.write(f"Total Tasks {tasks_to_be_completed}")
+        try: 
+            add_task(conn, new_task)
+            #st.write(f"Total Tasks {tasks_to_be_completed}")
+        except sqlite3.error:
+             st.write("Error adding tasks, check if task already in")
         
 # DISPLAYS TASK / DELETE TASK FUNCTIONALITY
 st.header("Your Tasks")
@@ -53,7 +56,7 @@ tasks = cursor.fetchall()
 if tasks:
     for task_id, task_name in tasks:
         st.write(task_name)
-        if st.button(f"Complete {task_name}"):
+        if st.button(f"RESOLVE {task_name}"):
             cursor.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
             conn.commit()
             #completed_task_count += 1

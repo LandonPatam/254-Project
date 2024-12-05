@@ -79,6 +79,27 @@ def get_word_by_id(conn, word_id):
     result = cur.fetchone()  # fetchone() returns a single record or None
     return result
 
+
+# RETRIVES WORD BY ID AND KNOWN STATUS
+def get_word_by_id_and_unknown(conn):
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM vocabulary WHERE known = ?", ("unknown",))  # Add the trailing comma
+    result = cur.fetchall()
+    return result
+
+
+list = get_word_by_id_and_unknown(conn)
+unknown_indexes = []
+for i in list:
+    unknown_indexes.append(i[0])
+
+print(unknown_indexes)
+    
+
+
+
+
+
 # RETURNS COUNT OF ALL ITEMS IN TABLE
 def count_items(conn):
     cur = conn.cursor()
