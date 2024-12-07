@@ -3,6 +3,7 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 import random
+import json
 
 # DATABASE CONNECTIONS
 conn = sqlite3.connect('vocabulary2.db', check_same_thread=False)
@@ -51,12 +52,30 @@ def add_data(conn, word, definition, learned):
         print("ALREADY IN DB")
         return False
 
+
+
+def add_full_data(conn, word, defintion, learned, progress_tracker):
+    try:
+
+        cur = conn.cursor()
+        cur.execute(''' INSERT INTO vocabulary(word, definition, known, progress_tracker) VALUES (?,?,?,?)  ''',      (word, defintion, learned, progress_tracker))
+        conn.commit()
+
+    except sqlite3.Error:
+        print("ERROR ADDING FULL DATA VIA IMPORT")
+
+
 # GETS DATA FROM TABLE 
 def get_data(conn):
     cur = conn.cursor()
     cur.execute("SELECT * FROM vocabulary")
     new_list = cur.fetchall()
     return new_list
+
+
+
+#add_full_data(conn, "thing99", "thing99def", "known", "5")
+
 
 
 # DELETES ALL DATA
@@ -259,40 +278,46 @@ learned_data.append(not_learned)
 
 # STREAMLIT SECTION
 
-#Creates labels for the bars
+
+# BAR CHART
 labels = ["Learned", "Not Learned"]
 
-# Create a DataFrame for better visualization
+
 df = pd.DataFrame({'Learned Status': labels, 'Values': learned_data})
 
-# Set the title of the app
+
 st.title("Known vs Unknown")
 
 
-# Create an Altair bar chart with thinner bars
 chart = alt.Chart(df).mark_bar(size=20).encode(
-    x=alt.X('Learned Status', axis=alt.Axis(labelAngle=0)),  # Set label angle to 0 for horizontal labels
+    x=alt.X('Learned Status', axis=alt.Axis(labelAngle=0)),
 
     y=alt.Y('Values')
 )
 
-
-
-
-# Display the chart
 st.altair_chart(chart, use_container_width=True)
 
-# Populate with data
+
+
+
+# LIST OF WORDS
+
 df = pd.DataFrame(list)
-
-# Set the title of the app
+df.columns = ['ID', 'Word', 'Definition', 'Learned Status', 'Progress Counter']
 st.title("Vocab words")
-
-# Rename the columns if desired
 df = df.iloc[:, 1:]
-
-# Display the DataFrame as a table with new headers
 st.table(df)
+
+
+
+# EXPORT AS JSON BUTTON
+
+if st.button("Generate JSON from data"):
+    new_list = get_data(conn)
+    with open("StudyWords.json", 'w') as json_file:
+        json.dump(new_list, json_file, indent=4)
+    st.write("Exported as JSON")
+
 
 
 #streamlit run test2.py
