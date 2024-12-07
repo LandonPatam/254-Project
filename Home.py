@@ -279,24 +279,6 @@ learned_data.append(not_learned)
 # STREAMLIT SECTION
 
 
-# BAR CHART
-labels = ["Learned", "Not Learned"]
-
-
-df = pd.DataFrame({'Learned Status': labels, 'Values': learned_data})
-
-
-st.title("Known vs Unknown")
-
-
-chart = alt.Chart(df).mark_bar(size=20).encode(
-    x=alt.X('Learned Status', axis=alt.Axis(labelAngle=0)),
-
-    y=alt.Y('Values')
-)
-
-st.altair_chart(chart, use_container_width=True)
-
 
 
 
@@ -317,6 +299,23 @@ if st.button("Generate JSON from data"):
     with open("StudyWords.json", 'w') as json_file:
         json.dump(new_list, json_file, indent=4)
     st.write("Exported as JSON")
+
+
+
+# BAR CHART
+labels = ["Learned", "Not Learned"]
+df = pd.DataFrame({'Learned Status': labels, 'Values': learned_data})
+st.title("Known vs Unknown")
+chart = alt.Chart(df).mark_bar(size=20).encode(
+    x=alt.X('Learned Status', axis=alt.Axis(labelAngle=0)),
+
+    y=alt.Y('Values')
+)
+st.altair_chart(chart, use_container_width=True)
+
+
+
+
 
 
 
