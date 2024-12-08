@@ -5,7 +5,6 @@ import sqlite3
 
 
 
-# Session for Page1
 if "word" not in st.session_state:
     st.session_state.word = ""
 if "definition" not in st.session_state:

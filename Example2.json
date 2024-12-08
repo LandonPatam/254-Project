@@ -1,0 +1,65 @@
+[
+    [
+        1,
+        "Isotopes",
+        "atoms of the same element that have different numbers of neutrons",
+        "known",
+        5
+    ],
+    [
+        2,
+        "Cell",
+        "Basic Unit of Life",
+        "known",
+        9
+    ],
+    [
+        3,
+        "Eukaryotes",
+        "organisms made up of one or more cells that have a nucleus and membrane-bound organelles",
+        "unknown",
+        1
+    ],
+    [
+        4,
+        "Prokaryotes",
+        "single-celled organisms that do not have a membrane-bound nucleus",
+        "unknown",
+        2
+    ],
+    [
+        5,
+        "Species",
+        "group of similar organisms that can breed and produce fertile offspring",
+        "known",
+        9
+    ],
+    [
+        6,
+        "Ions",
+        "electrically charged atoms that have gained or lost electrons.",
+        "known",
+        7
+    ],
+    [
+        7,
+        "Hypothesis",
+        "An educated guess around which an experiment is designed in order to answer a question about the natural world",
+        "unknown",
+        0
+    ],
+    [
+        8,
+        "Independent variable",
+        "The one condition that scientists change in the experimental group",
+        "unknown",
+        0
+    ],
+    [
+        9,
+        "Dependent variable",
+        "The characteristic that changes as a result of the independent variable",
+        "unknown",
+        0
+    ]
+]

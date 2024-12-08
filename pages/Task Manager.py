@@ -4,14 +4,14 @@ import pandas as pd
 import altair as alt
 #from Home import completed_task_count
 
-# Inline database setup
+
 conn = sqlite3.connect('vocabulary2.db', check_same_thread=False)
 cursor = conn.cursor()
 
 completed_task_count = 0
 tasks_to_be_completed = 0
 
-# Create the tasks table if it doesn't exist
+
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS tasks (
         id INTEGER PRIMARY KEY AUTOINCREMENT,

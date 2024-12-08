@@ -28,6 +28,7 @@ conn.commit()
 #''')
 #conn.commit()
 
+
 # TEST VARIABLES
 my_dict = {
     'key1': ['value1_1', 'value1_2'],
@@ -95,14 +96,14 @@ def delete_data(conn):
 def get_word_by_id(conn, word_id):
     cur = conn.cursor()
     cur.execute("SELECT * FROM vocabulary WHERE id = ?", (word_id,))
-    result = cur.fetchone()  # fetchone() returns a single record or None
+    result = cur.fetchone()
     return result
 
 
 # RETRIVES WORD BY ID AND KNOWN STATUS
 def get_word_by_id_and_unknown(conn):
     cur = conn.cursor()
-    cur.execute("SELECT * FROM vocabulary WHERE known = ?", ("unknown",))  # Add the trailing comma
+    cur.execute("SELECT * FROM vocabulary WHERE known = ?", ("unknown",)) 
     result = cur.fetchall()
     return result
 
@@ -123,13 +124,13 @@ print(unknown_indexes)
 def count_items(conn):
     cur = conn.cursor()
     cur.execute("SELECT COUNT(*) FROM vocabulary")
-    count = cur.fetchone()[0]  # fetchone() returns a tuple (count,) so we access the first element
+    count = cur.fetchone()[0] 
     return count
 
 # INCREMENTS PROGRESS TRACKER VARIABLE
 def increment_progress_tracker(conn, row_id, increment_value=1):
     try:
-        # Update the progress_tracker for the specified row
+        
         cur = conn.cursor()
         cur.execute('''
             UPDATE vocabulary
@@ -144,17 +145,17 @@ def increment_progress_tracker(conn, row_id, increment_value=1):
 # CHANGES STATUS OF WORD FROM UNKNOWN TO KNOWN
 def mark_word_as_known(conn, row_id):
     try:
-        # Create a cursor to interact with the database
+        
         cursor = conn.cursor()
         
-        # Update the 'known' column to 'known' for the specific row
+        
         cursor.execute('''
             UPDATE vocabulary
             SET known = 'known'
             WHERE id = ?
         ''', (row_id,))
         
-        # Commit the changes to the database
+        
         conn.commit()
         print(f"Word with ID {row_id} is now marked as known.")
     
@@ -164,17 +165,17 @@ def mark_word_as_known(conn, row_id):
 
 def mark_word_as_UNknown(conn, row_id):
     try:
-        # Create a cursor to interact with the database
+        
         cursor = conn.cursor()
         
-        # Update the 'known' column to 'known' for the specific row
+        
         cursor.execute('''
             UPDATE vocabulary
             SET known = 'unknown'
             WHERE id = ?
         ''', (row_id,))
         
-        # Commit the changes to the database
+        
         conn.commit()
         print(f"Word with ID {row_id} is now marked as known.")
     
@@ -207,7 +208,7 @@ def get_progress_tracker(conn, row_id):
         ''', (row_id,))
         result = cur.fetchone()
         if result:
-            return result[0]  # Fetch the progress_tracker value
+            return result[0]  
         else:
             print(f"No entry found with id {row_id}.")
             return None

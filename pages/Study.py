@@ -7,7 +7,7 @@ from Home import *
 
 # INITIALIZES SESSION STATE AND SETS ALL VARIABLES FOR SESSION
 
-# Check if the button click state exists in session_state; if not, initialize it
+
 if 'button_clicked' not in st.session_state:
     st.session_state.button_clicked = None
 
@@ -20,7 +20,7 @@ for i in list:
     unknown_indexes.append(i[0])
 #print(unknown_indexes)
 
-# Display buttons and update session_state based on the user's choice
+# BUTTONS FOR FILTERS
 col1, col2 = st.columns(2)
 
 
@@ -60,7 +60,7 @@ with col2:
             st.write("NOT ENOUGH WORDS IN VOCAB LIST")
 
 
-# If no button has been clicked yet, stop execution and wait
+
 if st.session_state.button_clicked is None:
     st.stop()
 
@@ -180,7 +180,7 @@ if len(list) >= 4:
         elif study_set == "UNKNOWN WORDS" or st.session_state.study_set == "UNKNOWN WORDS":
             random_value = random.choice(unknown_indexes) 
         study_value = get_word_by_id(conn, random_value)
-        st.session_state.study_value = study_value  # Update the session state with the new word
+        st.session_state.study_value = study_value  
 
 
         item_count = count_items(conn) 
